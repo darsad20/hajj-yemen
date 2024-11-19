@@ -3,79 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>استعلام الحجاج</title>
+  <title>استعلام عن حجاج موسم 1446 هـ</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      direction: rtl;
       text-align: center;
-      margin: 20px;
+      direction: rtl;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
     }
-    input, button {
-      padding: 10px;
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      border-bottom: 1px solid #ddd;
+    }
+    .header img {
+      width: 300px;
+    }
+    .header div {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: right;
+      line-height: 2;
+      color: #333;
+    }
+    .title {
+      margin: 30px 0;
+      font-size: 28px;
+      font-weight: bold;
+      color: #333;
+    }
+    .instructions {
+      margin: 10px 0 30px;
+      font-size: 20px;
+      color: #555;
+    }
+    #passportInput {
+      width: 250px;
+      padding: 8px;
       font-size: 16px;
     }
-    table {
-      margin: 20px auto;
-      border-collapse: collapse;
-      width: 80%;
+    #searchButton {
+      padding: 8px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
-    th, td {
+    #searchButton:hover {
+      background-color: #45a049;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+    .result table {
+      width: 50%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .result th, .result td {
       border: 1px solid #ddd;
       padding: 8px;
+      text-align: center;
     }
-    th {
+    .result th {
       background-color: #f2f2f2;
-    }
-    .error {
-      color: red;
     }
   </style>
 </head>
 <body>
-  <h1>استعلام الحجاج</h1>
-  <p>أدخل رقم الجواز أو اسم الحاج للاستعلام:</p>
-  <input type="text" id="queryInput" placeholder="رقم الجواز أو اسم الحاج">
-  <button onclick="fetchData()">استعلام</button>
-
-  <div id="result">
-    <!-- سيتم عرض النتائج هنا -->
+  <div class="header">
+    <div>
+      وزارة الأوقاف والإرشاد<br>
+      قطاع الحج والعمرة<br>
+      العاصمة المؤقتة عدن
+    </div>
+    <img src="الشعار.PNG" alt="شعار الوزارة">
   </div>
+  <div class="title">استعلام عن حجاج موسم 1446 هـ</div>
+  <div class="instructions">يرجى إدخال رقم الجواز ثم النقر على زر "استعلام"</div>
+  <input type="text" id="passportInput" placeholder="أدخل رقم الجواز">
+  <button id="searchButton">استعلام</button>
+  <div class="result" id="result"></div>
 
   <script>
-    async function fetchData() {
-      const query = document.getElementById("queryInput").value.trim();
-      const apiUrl = "https://script.google.com/macros/s/AKfycbxw9ORdYRJ2VQYZKZxNIOWRH3QqtCrwVbD4hsoKZA6kOf19VHpJj8hv_PGZTU7w6SM6Bw/exec";
-
-      if (!query) {
-        alert("يرجى إدخال رقم الجواز أو اسم الحاج.");
+    document.getElementById("searchButton").addEventListener("click", function() {
+      const passportNumber = document.getElementById("passportInput").value.trim();
+      if (passportNumber === "") {
+        alert("يرجى إدخال رقم الجواز");
         return;
       }
 
-      try {
-        const response = await fetch(`${apiUrl}?query=${query}`);
-        const data = await response.json();
+      // استعلام عبر Google Apps Script API
+      const apiUrl = "YOUR_GOOGLE_SCRIPT_API_URL" + "?query=" + encodeURIComponent(passportNumber);
 
-        if (data.length > 0) {
-          let table = "<table>";
-          table += "<tr><th>اسم الوكالة</th><th>اسم الحاج</th><th>رقم الجواز</th></tr>";
-          data.forEach(row => {
-            table += `<tr>
-                        <td>${row["اسم الوكالة"]}</td>
-                        <td>${row["اسم الحاج"]}</td>
-                        <td>${row["رقم الجواز"]}</td>
-                      </tr>`;
-          });
-          table += "</table>";
-          document.getElementById("result").innerHTML = table;
-        } else {
-          document.getElementById("result").innerHTML = "<p>لم يتم العثور على نتائج مطابقة.</p>";
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        document.getElementById("result").innerHTML = "<p class='error'>حدث خطأ أثناء الاستعلام. يرجى المحاولة مرة أخرى لاحقًا.</p>";
-      }
-    }
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const resultDiv = document.getElementById("result");
+          if (data.success && data.result) {
+            const result = data.result;
+            resultDiv.innerHTML = `
+              <table>
+                <tr>
+                  <th>اسم الوكالة</th>
+                  <th>اسم الحاج</th>
+                  <th>رقم الجواز</th>
+                </tr>
+                <tr>
+                  <td>${result.agencyName}</td>
+                  <td>${result.pilgrimName}</td>
+                  <td>${result.passportNumber}</td>
+                </tr>
+              </table>
+            `;
+          } else {
+            resultDiv.innerHTML = `<p style="color: red;">لم يتم العثور على نتائج مطابقة</p>`;
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("حدث خطأ أثناء الاستعلام. يرجى المحاولة مرة أخرى لاحقًا.");
+        });
+    });
   </script>
 </body>
 </html>
