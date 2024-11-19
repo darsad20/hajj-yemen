@@ -107,7 +107,7 @@
       }
 
       // استعلام عبر Google Apps Script API
-      const apiUrl = "https://script.google.com/macros/s/AKfycbzxc62ol1Z2g1NKy6ll6uZd9sOkIxL_ofDzBznF-MPq307V8C6P491qkvkcJ-EXwDPfmQ/exec?passport=" + encodeURIComponent(passportNumber);
+      const apiUrl = "https://script.google.com/macros/s/AKfycbwjqkHjMjhSD5_YSmkU6Tnmc_I5ZaWIcP9yjs3CDtbhdhwqtF0znWH7m01o9v9B5j5jkg/exec?passport=" + encodeURIComponent(passportNumber);
 
       fetch(apiUrl)
         .then(response => response.json())
@@ -124,9 +124,9 @@
                   <th>المنشأة المسجل فيها</th>
                 </tr>
                 <tr>
-                  <td>${data[" رقم الجواز"]}</td>
+                  <td>${data["رقم الجواز"]}</td>
                   <td>${data["اسم الحاج"]}</td>
-                  <td>${data[" المنشأة المسجل فيها"]}</td>
+                  <td>${data["المنشأة المسجل فيها"]}</td>
                 </tr>
               </table>
             `;
