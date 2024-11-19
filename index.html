@@ -99,22 +99,23 @@
   <div class="result" id="result"></div>
 
   <script>
-    document.getElementById("searchButton").addEventListener("click", function () {
+    document.getElementById("searchButton").addEventListener("click", function() {
       const passportNumber = document.getElementById("passportInput").value.trim();
       if (passportNumber === "") {
         alert("يرجى إدخال رقم الجواز");
         return;
       }
 
-      // استعلام البيانات من ملف GitHub
+      // استعلام عن البيانات من ملف JSON في GitHub
       const apiUrl = "https://raw.githubusercontent.com/darsad20/hajj-yemen/main/data.json";
 
       fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
           const resultDiv = document.getElementById("result");
-          const record = data.find(item => item.passportNumber === passportNumber);
-          if (record) {
+          const pilgrim = data.find(item => item.passportNumber === passportNumber);
+
+          if (pilgrim) {
             resultDiv.innerHTML = `
               <table>
                 <tr>
@@ -123,9 +124,9 @@
                   <th>المنشأة المسجل فيها</th>
                 </tr>
                 <tr>
-                  <td>${record.passportNumber}</td>
-                  <td>${record.pilgrimName}</td>
-                  <td>${record.agencyName}</td>
+                  <td>${pilgrim.passportNumber}</td>
+                  <td>${pilgrim.pilgrimName}</td>
+                  <td>${pilgrim.agencyName}</td>
                 </tr>
               </table>
             `;
