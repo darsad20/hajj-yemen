@@ -102,14 +102,13 @@
       }
 
       // استعلام عبر Google Apps Script API
-      const apiUrl = "YOUR_GOOGLE_SCRIPT_API_URL" + "?query=" + encodeURIComponent(passportNumber);
+      const apiUrl = "https://script.google.com/macros/s/AKfycbzxc62ol1Z2g1NKy6ll6uZd9sOkIxL_ofDzBznF-MPq307V8C6P491qkvkcJ-EXwDPfmQ/exec?passport=" + encodeURIComponent(passportNumber);
 
       fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
           const resultDiv = document.getElementById("result");
-          if (data.success && data.result) {
-            const result = data.result;
+          if (data["اسم الوكالة"] && data["اسم الحاج"] && data["رقم الجواز"]) {
             resultDiv.innerHTML = `
               <table>
                 <tr>
@@ -118,9 +117,9 @@
                   <th>رقم الجواز</th>
                 </tr>
                 <tr>
-                  <td>${result.agencyName}</td>
-                  <td>${result.pilgrimName}</td>
-                  <td>${result.passportNumber}</td>
+                  <td>${data["اسم الوكالة"]}</td>
+                  <td>${data["اسم الحاج"]}</td>
+                  <td>${data["رقم الجواز"]}</td>
                 </tr>
               </table>
             `;
