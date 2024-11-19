@@ -21,7 +21,7 @@
       border-bottom: 1px solid #ddd;
     }
     .header img {
-      width: 150px;
+      width: 300px;
     }
     .header div {
       font-size: 18px;
@@ -106,14 +106,16 @@
         return;
       }
 
-      // استعلام عبر GitHub
-      fetch("https://raw.githubusercontent.com/darsad20/hajj-yemen/main/data.json")
+      // استعلام من data.json على GitHub
+      const apiUrl = "https://raw.githubusercontent.com/darsad20/hajj-yemen/main/data.json";
+
+      fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
           const resultDiv = document.getElementById("result");
-          const result = data.find(item => item.passportNumber === passportNumber);
+          const match = data.find(item => item.passportNumber === passportNumber);
 
-          if (result) {
+          if (match) {
             resultDiv.innerHTML = `
               <table>
                 <tr>
@@ -122,9 +124,9 @@
                   <th>المنشأة المسجل فيها</th>
                 </tr>
                 <tr>
-                  <td>${result.passportNumber}</td>
-                  <td>${result.pilgrimName}</td>
-                  <td>${result.agencyName}</td>
+                  <td>${match.passportNumber}</td>
+                  <td>${match.pilgrimName}</td>
+                  <td>${match.agencyName}</td>
                 </tr>
               </table>
             `;
