@@ -106,16 +106,16 @@
         return;
       }
 
-      // استعلام من data.json على GitHub
-      const apiUrl = "https://raw.githubusercontent.com/darsad20/hajj-yemen/main/data.json";
+      // رابط نشر تطبيق Apps Script مع إضافة رقم الجواز كمعلمة
+      const apiUrl = `https://script.google.com/macros/s/AKfycbwIfBgAB5dpXePMxqYxj5325HewAyjqQ3U25dNft0mpgRwbcxU1JPf285S0qUASeI2JQQ/exec?passportNumber=${encodeURIComponent(passportNumber)}`;
 
       fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
           const resultDiv = document.getElementById("result");
-          const match = data.find(item => item.passportNumber === passportNumber);
-
-          if (match) {
+          if (data.error) {
+            resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+          } else {
             resultDiv.innerHTML = `
               <table>
                 <tr>
@@ -124,14 +124,12 @@
                   <th>المنشأة المسجل فيها</th>
                 </tr>
                 <tr>
-                  <td>${match.passportNumber}</td>
-                  <td>${match.pilgrimName}</td>
-                  <td>${match.agencyName}</td>
+                  <td>${data.passportNumber}</td>
+                  <td>${data.pilgrimName}</td>
+                  <td>${data.agencyName}</td>
                 </tr>
               </table>
             `;
-          } else {
-            resultDiv.innerHTML = `<p class="error">لا توجد بيانات مطابقة.</p>`;
           }
         })
         .catch(error => {
