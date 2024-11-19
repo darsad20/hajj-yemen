@@ -99,23 +99,22 @@
   <div class="result" id="result"></div>
 
   <script>
-    document.getElementById("searchButton").addEventListener("click", function() {
+    document.getElementById("searchButton").addEventListener("click", function () {
       const passportNumber = document.getElementById("passportInput").value.trim();
       if (passportNumber === "") {
         alert("يرجى إدخال رقم الجواز");
         return;
       }
 
-      // استعلام عبر Google Apps Script API
-      const apiUrl = "https://script.google.com/macros/s/AKfycbwjqkHjMjhSD5_YSmkU6Tnmc_I5ZaWIcP9yjs3CDtbhdhwqtF0znWH7m01o9v9B5j5jkg/exec?passport=" + encodeURIComponent(passportNumber);
+      // استعلام البيانات من ملف GitHub
+      const apiUrl = "https://raw.githubusercontent.com/darsad20/hajj-yemen/main/data.json";
 
       fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
           const resultDiv = document.getElementById("result");
-          if (data.error) {
-            resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
-          } else {
+          const record = data.find(item => item.passportNumber === passportNumber);
+          if (record) {
             resultDiv.innerHTML = `
               <table>
                 <tr>
@@ -124,18 +123,20 @@
                   <th>المنشأة المسجل فيها</th>
                 </tr>
                 <tr>
-                  <td>${data["رقم الجواز"]}</td>
-                  <td>${data["اسم الحاج"]}</td>
-                  <td>${data["المنشأة المسجل فيها"]}</td>
+                  <td>${record.passportNumber}</td>
+                  <td>${record.pilgrimName}</td>
+                  <td>${record.agencyName}</td>
                 </tr>
               </table>
             `;
+          } else {
+            resultDiv.innerHTML = `<p class="error">لا توجد بيانات مطابقة.</p>`;
           }
         })
         .catch(error => {
           console.error("Error:", error);
           const resultDiv = document.getElementById("result");
-          resultDiv.innerHTML = `<p class="error">لا توجد بيانات مطابقة.</p>`;
+          resultDiv.innerHTML = `<p class="error">حدث خطأ أثناء جلب البيانات.</p>`;
         });
     });
   </script>
