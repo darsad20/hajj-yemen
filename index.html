@@ -62,22 +62,24 @@
       font-size: 18px;
       color: #333;
     }
-    .result table, .all-data table {
-      width: 70%;
+    .result table {
+      width: 50%;
       margin: 0 auto;
       border-collapse: collapse;
       margin-top: 20px;
     }
-    .result th, .result td, .all-data th, .all-data td {
+    .result th, .result td {
       border: 1px solid #ddd;
       padding: 8px;
       text-align: center;
     }
-    .result th, .all-data th {
+    .result th {
       background-color: #f2f2f2;
     }
-    .all-data {
-      margin-top: 50px;
+    .error {
+      color: red;
+      margin-top: 20px;
+      font-size: 18px;
     }
   </style>
 </head>
@@ -96,13 +98,7 @@
   <button id="searchButton">استعلام</button>
   <div class="result" id="result"></div>
 
-  <div class="all-data">
-    <h2>جميع بيانات الحجاج</h2>
-    <div id="data"></div>
-  </div>
-
   <script>
-    // استعلام عبر رقم الجواز
     document.getElementById("searchButton").addEventListener("click", function() {
       const passportNumber = document.getElementById("passportInput").value.trim();
       if (passportNumber === "") {
@@ -110,10 +106,16 @@
         return;
       }
 
+      // استعلام عبر Google Apps Script API
       const apiUrl = "https://script.google.com/macros/s/AKfycbzxc62ol1Z2g1NKy6ll6uZd9sOkIxL_ofDzBznF-MPq307V8C6P491qkvkcJ-EXwDPfmQ/exec?passport=" + encodeURIComponent(passportNumber);
 
       fetch(apiUrl)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
         .then(data => {
           const resultDiv = document.getElementById("result");
           if (data["اسم الوكالة"] && data["اسم الحاج"] && data["رقم الجواز"]) {
@@ -132,28 +134,15 @@
               </table>
             `;
           } else {
-            resultDiv.innerHTML = `<p style="color: red;">لا توجد بيانات مطابقة</p>`;
+            resultDiv.innerHTML = `<p class="error">لا توجد بيانات مطابقة</p>`;
           }
         })
         .catch(error => {
           console.error("Error:", error);
-          alert("حدث خطأ أثناء الاستعلام. يرجى المحاولة مرة أخرى لاحقًا.");
+          const resultDiv = document.getElementById("result");
+          resultDiv.innerHTML = `<p class="error">لا توجد بيانات مطابقة</p>`;
         });
     });
-
-    // عرض جميع بيانات الحجاج
-    fetch("https://raw.githubusercontent.com/darsad20/hajj-yemen/main/data.json")
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById("data");
-        let table = "<table><tr><th>اسم الوكالة</th><th>اسم الحاج</th><th>رقم الجواز</th></tr>";
-        data.forEach(item => {
-          table += `<tr><td>${item.agencyName}</td><td>${item.pilgrimName}</td><td>${item.passportNumber}</td></tr>`;
-        });
-        table += "</table>";
-        container.innerHTML = table;
-      })
-      .catch(error => console.error("Error fetching data:", error));
   </script>
 </body>
 </html>
