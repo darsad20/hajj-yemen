@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>استعلام عن حجاج موسم 1446 هـ</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap'); /* استبدل Cairo بخط آخر إذا كنت تريد PT Bold Heading */
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Cairo', Arial, sans-serif; /* استبدل Cairo بخط PT إذا كان متاحًا */
       text-align: center;
       direction: rtl;
       margin: 0;
@@ -24,7 +26,7 @@
       width: 300px;
     }
     .header div {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
       text-align: right;
       line-height: 2;
@@ -106,7 +108,6 @@
         return;
       }
 
-      // رابط نشر تطبيق Apps Script مع إضافة رقم الجواز كمعلمة
       const apiUrl = `https://script.google.com/macros/s/AKfycbwIfBgAB5dpXePMxqYxj5325HewAyjqQ3U25dNft0mpgRwbcxU1JPf285S0qUASeI2JQQ/exec?passportNumber=${encodeURIComponent(passportNumber)}`;
 
       fetch(apiUrl)
