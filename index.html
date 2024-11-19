@@ -13,108 +13,243 @@
       direction: rtl;
       margin: 0;
       padding: 0;
-      background-color: #ffffff;
+      background: linear-gradient(to right, #f0f0f0, #ffffff); /* خلفية بتدرج الرمادي الفاتح مع الأبيض */
     }
+
     .header {
       display: flex;
-      justify-content: space-between;
+      flex-direction: row;
       align-items: center;
-      padding: 20px 50px;
+      justify-content: space-between;
+      padding: 10px 20px;
       border-bottom: 1px solid #ddd;
     }
+
     .header img {
-      width: 300px;
+      order: 2;
+      width: 200px; /* تكبير العرض لجعل الصورة تتناسب مع شاشة اللابتوب */
+      height: auto;
     }
+
     .header div {
-      font-size: 20px;
-      font-weight: bold;
+      order: 1;
       text-align: right;
-      line-height: 2;
-      color: #333;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 1.5;
     }
+
     .title {
-      margin: 30px 0;
-      font-size: 28px;
+      margin: 20px 0;
+      font-size: 24px;
       font-weight: bold;
       color: #333;
     }
+
     .instructions {
-      margin: 10px 0 30px;
-      font-size: 20px;
+      margin: 10px 0 20px;
+      font-size: 16px;
       color: #555;
     }
+
     #passportInput {
-      width: 150px; /* تصغير العرض */
-      padding: 3px; /* تقليل الحواف الداخلية */
-      font-size: 12px; /* تقليل حجم الخط */
-      height: 25px; /* تحديد ارتفاع أقل */
+      width: 100px; /* تقليل العرض ليكون مناسبًا لاحتواء 8 أرقام فقط */
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center; /* توسيط الكتابة في المستطيل */
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1); /* إضافة تأثير تظليل */
     }
-    #searchButton {
-      padding: 5px 15px; /* تصغير زر البحث */
-      font-size: 14px; /* تقليل حجم الخط في الزر */
+
+    #searchButton, #resetButton {
+      padding: 10px 20px;
+      font-size: 14px;
       background-color: #4CAF50;
       color: white;
       border: none;
+      border-radius: 5px;
+      margin-top: 10px;
       cursor: pointer;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* إضافة تأثير تظليل */
+      transition: transform 0.3s ease; /* تأثير انتقالي عند التمرير */
     }
-    #searchButton:hover {
-      background-color: #45a049;
+
+    #searchButton:hover, #resetButton:hover {
+      transform: scale(1.05); /* تكبير طفيف عند التمرير */
+      background-color: #45a049; /* تغيير لون الخلفية قليلاً */
     }
-    .result {
+
+    #loader {
+      display: none;
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 16px;
       color: #333;
     }
-    .result table {
-      width: 50%;
-      margin: 0 auto;
-      border-collapse: collapse;
+
+    #progressBar {
+      display: none;
       margin-top: 20px;
     }
+
+    .result {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .result table {
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
     .result th, .result td {
       border: 1px solid #ddd;
-      padding: 8px;
+      padding: 10px;
       text-align: center;
     }
+
     .result th {
       background-color: #f2f2f2;
     }
-    .error {
-      color: red;
+
+    .success-message {
+      display: none;
+      color: green;
       margin-top: 20px;
-      font-size: 18px;
+    }
+
+    /* Media Queries لجعل التصميم متجاوب */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        padding: 10px;
+      }
+
+      .header img {
+        width: 150px; /* تكبير العرض قليلاً للأجهزة الأصغر */
+        margin-bottom: 10px;
+      }
+
+      .header div {
+        font-size: 12px;
+      }
+
+      #passportInput {
+        width: 90%;
+      }
+
+      #searchButton, #resetButton {
+        width: 90%;
+        padding: 10px;
+      }
+
+      .title {
+        font-size: 20px;
+      }
+
+      .instructions {
+        font-size: 14px;
+      }
+
+      .result table {
+        width: 100%;
+        font-size: 12px;
+      }
+
+      .result th, .result td {
+        padding: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header div {
+        font-size: 10px;
+      }
+
+      .title {
+        font-size: 18px;
+      }
+
+      .instructions {
+        font-size: 12px;
+      }
+
+      #searchButton, #resetButton {
+        font-size: 12px;
+      }
+
+      .result table {
+        font-size: 10px;
+      }
+
+      .result th, .result td {
+        padding: 5px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="header">
+    <img src="https://raw.githubusercontent.com/darsad20/hajj-yemen/main/pic.png" alt="شعار الوزارة">
     <div>
       وزارة الأوقاف والإرشاد<br>
       قطاع الحج والعمرة<br>
       العاصمة المؤقتة عدن
     </div>
-    <img src="https://raw.githubusercontent.com/darsad20/hajj-yemen/main/pic.png" alt="شعار الوزارة">
   </div>
   <div class="title">استعلام عن حجاج موسم 1446 هـ</div>
   <div class="instructions">يرجى إدخال رقم الجواز ثم النقر على زر "استعلام"</div>
-  <input type="text" id="passportInput" placeholder="أدخل رقم الجواز">
-  <button id="searchButton">استعلام</button>
+  <input type="text" id="passportInput" maxlength="8" placeholder="أدخل رقم الجواز" title="يرجى إدخال رقم الجواز المكون من 8 أرقام">
+  <button id="searchButton" title="انقر هنا للبحث">استعلام</button>
+  <button id="resetButton" title="إعادة تعيين الحقول">إعادة تعيين</button>
+  <div id="loader">جاري التحميل...</div>
+  <div id="progressBar">
+    <progress value="0" max="100" id="progress"></progress>
+  </div>
+  <div class="success-message" id="successMessage">تم العثور على البيانات بنجاح</div>
   <div class="result" id="result"></div>
 
   <script>
+    document.getElementById("passportInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        document.getElementById("searchButton").click();
+      }
+    });
+
     document.getElementById("searchButton").addEventListener("click", function() {
       const passportNumber = document.getElementById("passportInput").value.trim();
-      if (passportNumber === "") {
-        alert("يرجى إدخال رقم الجواز");
+      if (passportNumber === "" || !/^\d{8}$/.test(passportNumber)) {
+        alert("يرجى إدخال رقم جواز صالح يحتوي على 8 أرقام فقط");
         return;
       }
 
       const apiUrl = `https://script.google.com/macros/s/AKfycbwIfBgAB5dpXePMxqYxj5325HewAyjqQ3U25dNft0mpgRwbcxU1JPf285S0qUASeI2JQQ/exec?passportNumber=${encodeURIComponent(passportNumber)}`;
 
+      const loader = document.getElementById("loader");
+      const progressBar = document.getElementById("progressBar");
+      loader.style.display = "block";
+      progressBar.style.display = "block";
+      const resultDiv = document.getElementById("result");
+      const successMessage = document.getElementById("successMessage");
+      resultDiv.innerHTML = "";
+      successMessage.style.display = "none";
+
+      let progressValue = 0;
+      const interval = setInterval(() => {
+        progressValue += 10;
+        document.getElementById("progress").value = progressValue;
+        if (progressValue >= 100) clearInterval(interval);
+      }, 300);
+
       fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-          const resultDiv = document.getElementById("result");
+          loader.style.display = "none";
+          progressBar.style.display = "none";
           if (data.error) {
             resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
           } else {
@@ -132,13 +267,21 @@
                 </tr>
               </table>
             `;
+            successMessage.style.display = "block";
           }
         })
         .catch(error => {
+          loader.style.display = "none";
+          progressBar.style.display = "none";
           console.error("Error:", error);
-          const resultDiv = document.getElementById("result");
           resultDiv.innerHTML = `<p class="error">حدث خطأ أثناء جلب البيانات.</p>`;
         });
+    });
+
+    document.getElementById("resetButton").addEventListener("click", function() {
+      document.getElementById("passportInput").value = "";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("successMessage").style.display = "none";
     });
   </script>
 </body>
