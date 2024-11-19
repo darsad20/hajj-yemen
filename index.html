@@ -110,15 +110,12 @@
       const apiUrl = "https://script.google.com/macros/s/AKfycbzxc62ol1Z2g1NKy6ll6uZd9sOkIxL_ofDzBznF-MPq307V8C6P491qkvkcJ-EXwDPfmQ/exec?passport=" + encodeURIComponent(passportNumber);
 
       fetch(apiUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
           const resultDiv = document.getElementById("result");
-          if (data["اسم الوكالة"] && data["اسم الحاج"] && data["رقم الجواز"]) {
+          if (data.error) {
+            resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+          } else {
             resultDiv.innerHTML = `
               <table>
                 <tr>
@@ -133,14 +130,12 @@
                 </tr>
               </table>
             `;
-          } else {
-            resultDiv.innerHTML = `<p class="error">لا توجد بيانات مطابقة</p>`;
           }
         })
         .catch(error => {
           console.error("Error:", error);
           const resultDiv = document.getElementById("result");
-          resultDiv.innerHTML = `<p class="error">لا توجد بيانات مطابقة</p>`;
+          resultDiv.innerHTML = `<p class="error">لا توجد بيانات مطابقة.</p>`;
         });
     });
   </script>
